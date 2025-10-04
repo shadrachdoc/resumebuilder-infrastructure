@@ -1,0 +1,27 @@
+# Helm Chart Metadata
+# File: helm/postgres/Chart.yaml
+
+apiVersion: v2
+name: postgres
+description: PostgreSQL Helm Chart for Resume Builder Platform
+type: application
+version: 1.0.0
+appVersion: "15.0"
+
+keywords:
+  - postgres
+  - postgresql
+  - database
+  - sql
+
+maintainers:
+  - name: Resume Builder Team
+    email: dev@resumebuilder.com
+
+# Dependencies (none for now, but can add later)
+dependencies: []
+
+# Annotations
+annotations:
+  category: Database
+  licenses: Apache-2.0

@@ -1,0 +1,33 @@
+# PostgreSQL ConfigMap Template
+# File: helm/postgres/templates/configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- range $key, $val := .Values.labels }}
+    {{ $key }}: {{ $val }}
+    {{- end }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+data:
+  # PostgreSQL Configuration
+  POSTGRES_HOST: {{ .Values.service.name }}
+  POSTGRES_PORT: {{ .Values.service.port | quote }}
+  
+  # Connection pool settings
+  MAX_CONNECTIONS: {{ .Values.postgresql.maxConnections | quote }}
+  SHARED_BUFFERS: {{ .Values.postgresql.sharedBuffers | quote }}
+  
+  # Logging
+  LOG_STATEMENT: {{ .Values.postgresql.logStatement | quote }}
+  LOG_DURATION: {{ .Values.postgresql.logDuration | quote }}
+  
+  # Locale settings
+  LC_ALL: {{ .Values.postgresql.locale | quote }}
+  LANG: {{ .Values.postgresql.locale | quote }}
+  
+  # Init script for creating application database and user
+  init.sql: {{ .Values.initSQL | quote }}

@@ -1,0 +1,36 @@
+# Patterns to ignore when building Helm packages
+# File: helm/postgres/.helmignore
+
+# Version control
+.git/
+.gitignore
+
+# Build and CI
+.circleci/
+.github/
+.gitlab-ci.yml
+*.tar.gz
+
+# IDE and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Scripts (not needed in package)
+*.ps1
+*.sh
+
+# Documentation (README is kept)
+docs/
+CONTRIBUTING.md
