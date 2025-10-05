@@ -50,13 +50,13 @@ laravel:
     password: ""
   
   # Cache & Session
-  cacheStore: "file"
-  sessionDriver: "file"
-  queueConnection: "sync"
+  cacheStore: "redis"
+  sessionDriver: "redis"
+  queueConnection: "redis"
 
 # Health Checks
 livenessProbe:
-  enabled: false
+  enabled: true
   httpGet:
     path: /
     port: 80
@@ -66,7 +66,7 @@ livenessProbe:
   failureThreshold: 3
 
 readinessProbe:
-  enabled: false
+  enabled: true
   httpGet:
     path: /
     port: 80
