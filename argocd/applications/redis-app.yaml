@@ -7,7 +7,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/YOUR_USERNAME/resumebuilder-infrastructure.git
+    repoURL: https://github.com/shadrachdoc/resumebuilder-infrastructure.git
     targetRevision: develop
     path: helm/redis
     helm:
