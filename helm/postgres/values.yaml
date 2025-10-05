@@ -31,7 +31,7 @@ resources:
 # Persistent Volume Configuration
 persistence:
   enabled: true
-  storageClass: "hostpath"  # For Docker Desktop K8s
+  storageClass: "standard"  # For Docker Desktop K8s
   accessMode: ReadWriteOnce
   size: 10Gi
 
@@ -80,6 +80,8 @@ labels:
   app: postgres
   component: database
   environment: development
+
+
 
 # Init SQL script to create application database and user
 initSQL: |
