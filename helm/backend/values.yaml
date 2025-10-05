@@ -50,9 +50,9 @@ laravel:
     password: ""
   
   # Cache & Session
-  cacheStore: "redis"
-  sessionDriver: "redis"
-  queueConnection: "redis"
+  cacheStore: "file"
+  sessionDriver: "file"
+  queueConnection: "sync"
 
 # Health Checks
 livenessProbe:
