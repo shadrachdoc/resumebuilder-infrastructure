@@ -37,7 +37,7 @@ laravel:
   # Database
   database:
     connection: "pgsql"
-    host: "postgres-service.resumebuilder-dev.svc.cluster.local"
+    host: "postgres-service"
     port: "5432"
     database: "resumebuilder_dev"
     username: "resumeapp"
@@ -45,7 +45,7 @@ laravel:
   
   # Redis
   redis:
-    host: "redis-service.resumebuilder-dev.svc.cluster.local"
+    host: "redis-service"
     port: "6379"
     password: ""
   
