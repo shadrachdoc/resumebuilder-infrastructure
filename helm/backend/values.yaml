@@ -7,7 +7,7 @@ namespace: resumebuilder-dev
 image:
   repository: shadrach85/resumebuilder-api
   tag: "v2"
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 
 replicaCount: 1
 
@@ -57,7 +57,7 @@ laravel:
 # Health Checks
 # Health Checks
 livenessProbe:
-  enabled: true
+  enabled: false
   httpGet:
     path: /
     port: 80
@@ -67,7 +67,7 @@ livenessProbe:
   failureThreshold: 5      
 
 readinessProbe:
-  enabled: true
+  enabled: false
   httpGet:
     path: /
     port: 80
