@@ -7,7 +7,7 @@ namespace: resumebuilder-dev
 image:
   repository: shadrach85/resumebuilder-api
   tag: "v2"
-  pullPolicy: Always
+  pullPolicy: Never
 
 replicaCount: 1
 
