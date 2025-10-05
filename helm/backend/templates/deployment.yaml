@@ -29,9 +29,7 @@ spec:
             name: {{ .Values.service.name }}-secret
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
-          httpGet:
-            path: {{ .Values.livenessProbe.httpGet.path }}
-            port: {{ .Values.livenessProbe.httpGet.port }}
+          {{- toYaml .Values.livenessProbe.httpGet | nindent 10 }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -39,9 +37,7 @@ spec:
         {{- end }}
         {{- if .Values.readinessProbe.enabled }}
         readinessProbe:
-          httpGet:
-            path: {{ .Values.readinessProbe.httpGet.path }}
-            port: {{ .Values.readinessProbe.httpGet.port }}
+          {{- toYaml .Values.readinessProbe.httpGet | nindent 10 }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
