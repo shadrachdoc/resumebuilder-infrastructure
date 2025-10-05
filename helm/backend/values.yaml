@@ -1,0 +1,82 @@
+# Backend Helm Chart - Default Values (Development)
+# File: helm/backend/values.yaml
+
+namespace: resumebuilder-dev
+
+# Docker Image Configuration
+image:
+  repository: shadrach85/resumebuilder-api
+  tag: "latest"
+  pullPolicy: Always
+
+replicaCount: 1
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+  name: backend-service
+
+# Resource Limits
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Laravel Application Config
+laravel:
+  appName: "Resume Builder API"
+  appEnv: "production"
+  appDebug: "false"
+  appUrl: "http://backend-service"
+  
+  # Database
+  database:
+    connection: "pgsql"
+    host: "postgres-service.resumebuilder-dev.svc.cluster.local"
+    port: "5432"
+    database: "resumebuilder_dev"
+    username: "resumeapp"
+    password: "resumeapp@123"
+  
+  # Redis
+  redis:
+    host: "redis-service.resumebuilder-dev.svc.cluster.local"
+    port: "6379"
+    password: ""
+  
+  # Cache & Session
+  cacheStore: "redis"
+  sessionDriver: "redis"
+  queueConnection: "redis"
+
+# Health Checks
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Labels
+labels:
+  app: backend
+  component: api
+  environment: development
