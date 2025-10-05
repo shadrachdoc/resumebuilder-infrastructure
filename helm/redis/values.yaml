@@ -1,0 +1,50 @@
+# Redis Helm Chart - Default Values (Development)
+# File: helm/redis/values.yaml
+
+namespace: resumebuilder-dev
+
+image:
+  repository: redis
+  tag: "7.2-alpine"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 6379
+  name: redis-service
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+
+# Redis Configuration
+redis:
+  maxMemory: "200mb"
+  maxMemoryPolicy: "allkeys-lru"
+  # Password (empty for dev, set in production)
+  password: ""
+
+# Persistence disabled for cache (dev environment)
+persistence:
+  enabled: false
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+labels:
+  app: redis
+  component: cache
+  environment: development
