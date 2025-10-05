@@ -6,7 +6,7 @@ namespace: resumebuilder-dev
 # Docker Image Configuration
 image:
   repository: shadrach85/resumebuilder-api
-  tag: "v1"
+  tag: "v2"
   pullPolicy: Always
 
 replicaCount: 1
@@ -50,9 +50,9 @@ laravel:
     password: ""
   
   # Cache & Session
-  cacheStore: "file"
-  sessionDriver: "file"
-  queueConnection: "sync"
+  cacheStore: "redis"
+  sessionDriver: "redis"
+  queueConnection: "redis"
 
 # Health Checks
 # Health Checks
