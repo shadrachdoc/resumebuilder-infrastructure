@@ -4,9 +4,9 @@ metadata:
   name: frontend-service
   namespace: {{ .Values.namespace }}
   labels:
-    {{- range $key, $value := .Values.labels }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    environment: {{ .Values.labels.environment }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -14,10 +14,8 @@ spec:
     targetPort: http
     protocol: TCP
     name: http
-    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+    {{- if eq .Values.service.type "NodePort" }}
     nodePort: {{ .Values.service.nodePort }}
     {{- end }}
   selector:
     app: {{ .Values.labels.app }}
-
----

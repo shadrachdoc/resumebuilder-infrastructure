@@ -4,9 +4,9 @@ metadata:
   name: frontend-service
   namespace: {{ .Values.namespace }}
   labels:
-    {{- range $key, $value := .Values.labels }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    environment: {{ .Values.labels.environment }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -15,15 +15,13 @@ spec:
   template:
     metadata:
       labels:
-        {{- range $key, $value := .Values.labels }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        app: {{ .Values.labels.app }}
+        component: {{ .Values.labels.component }}
+        environment: {{ .Values.labels.environment }}
     spec:
       containers:
       - name: frontend
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
@@ -37,11 +35,26 @@ spec:
             name: frontend-newrelic-secret
         {{- end }}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
         livenessProbe:
-          {{- toYaml .Values.livenessProbe | nindent 10 }}
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
         readinessProbe:
-          {{- toYaml .Values.readinessProbe | nindent 10 }}
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
       restartPolicy: Always
-
----

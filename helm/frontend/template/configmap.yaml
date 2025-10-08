@@ -4,22 +4,17 @@ metadata:
   name: frontend-service-config
   namespace: {{ .Values.namespace }}
   labels:
-    {{- range $key, $value := .Values.labels }}
-    {{ $key }}: {{ $value | quote }}
-    {{- end }}
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    environment: {{ .Values.labels.environment }}
 data:
   VITE_API_URL: {{ .Values.app.apiUrl | quote }}
   NODE_ENV: {{ .Values.app.nodeEnv | quote }}
   ENVIRONMENT: {{ .Values.environment | quote }}
-  
+  NEW_RELIC_ENABLED: {{ .Values.newrelic.enabled | quote }}
   {{- if .Values.newrelic.enabled }}
-  NEW_RELIC_ENABLED: "true"
   NEW_RELIC_APP_NAME: {{ .Values.newrelic.appName | quote }}
   NEW_RELIC_BROWSER_MONITORING_ENABLED: {{ .Values.newrelic.browserMonitoring | quote }}
   NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true"
   NEW_RELIC_LOG_LEVEL: "info"
-  {{- else }}
-  NEW_RELIC_ENABLED: "false"
   {{- end }}
-
----

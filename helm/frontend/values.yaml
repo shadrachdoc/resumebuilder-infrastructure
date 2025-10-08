@@ -24,7 +24,7 @@ resources:
 # NewRelic Configuration
 newrelic:
   enabled: true
-  licenseKey: "eu01xxd7a4e83fc5364efe46e54b1012FFFFNRAL"  # Replace with actual key from newrelic.com
+  licenseKey: "eu01xxd7a4e83fc5364efe46e54b1012FFFFNRAL"  
   appName: "resumebuilder-frontend-dev"
   browserMonitoring: true
 
