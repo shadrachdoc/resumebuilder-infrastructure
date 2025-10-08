@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
+    component: {{ .Values.labels.component }}
+    environment: {{ .Values.labels.environment }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+        component: {{ .Values.labels.component }}
+        environment: {{ .Values.labels.environment }}
+    spec:
+      containers:
+      - name: frontend
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: frontend-service-config
+        {{- if .Values.newrelic.enabled }}
+        - secretRef:
+            name: frontend-newrelic-secret
+        {{- end }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+      restartPolicy: Always

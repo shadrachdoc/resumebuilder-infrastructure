@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-dev
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/shadrach85/resumebuilder-infrastructure.git
+    targetRevision: main
+    path: helm/frontend
+    helm:
+      valueFiles:
+        - values.yaml
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: resumebuilder-dev
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

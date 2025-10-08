@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: newrelic-bundle
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: https://helm-charts.newrelic.com
+    chart: nri-bundle
+    targetRevision: 5.0.103  # Check for latest version
+    helm:
+      # Inline values (paste your entire values.yaml content here)
+      values: |
+        newrelic-infrastructure:
+          enabled: true
+        
+        nri-prometheus:
+          enabled: false
+        
+        nri-metadata-injection:
+          enabled: true
+        
+        kube-state-metrics:
+          enabled: true
+        
+        nri-kube-events:
+          enabled: true
+        
+        newrelic-logging:
+          enabled: true
+        
+        newrelic-pixie:
+          enabled: false
+        
+        pixie-chart:
+          enabled: false
+        
+        newrelic-infra-operator:
+          enabled: false
+        
+        newrelic-prometheus-agent:
+          enabled: true
+        
+        newrelic-eapm-agent:
+          enabled: false
+        
+        k8s-agents-operator:
+          enabled: true
+        
+        newrelic-k8s-metrics-adapter:
+          enabled: false
+        
+        global:
+          cluster: resumebuilder-kind
+          licenseKey: eu01xxd7a4e83fc5364efe46e54b1012FFFFNRAL
+          lowDataMode: true
+          privileged: true
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: newrelic
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,109 @@
+# PostgreSQL Helm Chart - Default Values (Development)
+# File: helm/postgres/values.yaml
+
+# Namespace where PostgreSQL will be deployed
+namespace: resumebuilder-dev
+
+# PostgreSQL Image Configuration
+image:
+  repository: postgres
+  tag: "15-alpine"
+  pullPolicy: IfNotPresent
+
+# Replica count (1 for StatefulSet)
+replicaCount: 1
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 5432
+  name: postgres-service
+
+# Resource Limits
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# Persistent Volume Configuration
+persistence:
+  enabled: true
+  storageClass: "standard"  # For Docker Desktop K8s
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+# PostgreSQL Configuration
+postgresql:
+  # Superuser credentials
+  superuser:
+    username: postgres
+    password: postgres@123
+    database: postgres
+  
+  # Application user credentials
+  appuser:
+    username: resumeapp
+    password: resumeapp@123
+    database: resumebuilder_dev
+  
+  # PostgreSQL settings
+  maxConnections: "100"
+  sharedBuffers: "256MB"
+  
+  # Logging
+  logStatement: "all"
+  logDuration: "on"
+  
+  # Locale
+  locale: "en_US.UTF-8"
+
+# Health Checks
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Labels
+labels:
+  app: postgres
+  component: database
+  environment: development
+
+
+
+# Init SQL script to create application database and user
+initSQL: |
+  -- Create application user if not exists
+  DO
+  $do$
+  BEGIN
+     IF NOT EXISTS (
+        SELECT FROM pg_catalog.pg_roles
+        WHERE  rolname = '{{ .Values.postgresql.appuser.username }}') THEN
+        CREATE USER {{ .Values.postgresql.appuser.username }} WITH PASSWORD '{{ .Values.postgresql.appuser.password }}';
+     END IF;
+  END
+  $do$;
+  
+  -- Create application database if not exists
+  SELECT 'CREATE DATABASE {{ .Values.postgresql.appuser.database }} OWNER {{ .Values.postgresql.appuser.username }}'
+  WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '{{ .Values.postgresql.appuser.database }}')\gexec
+  
+  -- Grant privileges
+  GRANT ALL PRIVILEGES ON DATABASE {{ .Values.postgresql.appuser.database }} TO {{ .Values.postgresql.appuser.username }};
+  
+  -- Connect to application database and set up schema
+  \c {{ .Values.postgresql.appuser.database }};
+  GRANT ALL ON SCHEMA public TO {{ .Values.postgresql.appuser.username }};

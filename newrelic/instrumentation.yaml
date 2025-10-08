@@ -1,0 +1,12 @@
+apiVersion: newrelic.com/v1alpha2
+kind: Instrumentation
+metadata:
+  name: newrelic-instrumentation
+  namespace: newrelic
+spec:
+  agent:
+    language: php-8.2
+    image: newrelic/newrelic-php-init:latest
+  
+  # No selectors = monitors ALL namespaces
+  # namespaceLabelSelector: {}  # Empty or omit
