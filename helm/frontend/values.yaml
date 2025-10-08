@@ -1,0 +1,60 @@
+environment: dev
+namespace: resumebuilder-dev
+
+replicaCount: 1
+
+image:
+  repository: shadrach85/resumebuilder-web
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# NewRelic Configuration
+newrelic:
+  enabled: true
+  licenseKey: "eu01xxd7a4e83fc5364efe46e54b1012FFFFNRAL"  # Replace with actual key from newrelic.com
+  appName: "resumebuilder-frontend-dev"
+  browserMonitoring: true
+
+# Application Configuration
+app:
+  apiUrl: "http://localhost:30000/api"
+  nodeEnv: "development"
+
+# Health Check Configuration
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+labels:
+  app: frontend
+  component: web
+  environment: dev
+
+---
